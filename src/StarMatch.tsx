@@ -11,11 +11,16 @@ const Star = () => {
   return <div className="star" />;
 };
 
+interface DigitProps {
+  digit: number;
+}
+
+const Digit = (props: DigitProps) => {
+  const { digit } = props;
+  return <button className="number">{digit}</button>;
+};
+
 export const StarMatch = () => {
-  const starCount = 5;
-
-  const foo = arrayFromRange(1, starCount);
-
   return (
     <div className="game">
       <div className="help">
@@ -23,20 +28,14 @@ export const StarMatch = () => {
       </div>
       <div className="body">
         <div className="left">
-          {foo.map((currentStar) => (
+          {arrayFromRange(1, 9).map((currentStar) => (
             <Star />
           ))}
         </div>
         <div className="right">
-          <button className="number">1</button>
-          <button className="number">2</button>
-          <button className="number">3</button>
-          <button className="number">4</button>
-          <button className="number">5</button>
-          <button className="number">6</button>
-          <button className="number">7</button>
-          <button className="number">8</button>
-          <button className="number">9</button>
+          {arrayFromRange(1, 9).map((i) => (
+            <Digit digit={i} />
+          ))}
         </div>
       </div>
       <div className="timer">Time Remaining: 10</div>
