@@ -1,4 +1,5 @@
-import { arrayFromRange } from "./lib/utils";
+import { arrayFromRange, randIntInclusive } from "./lib/utils";
+import { useState } from "react";
 
 const colors = {
   available: "lightgray",
@@ -21,14 +22,17 @@ const Digit = (props: DigitProps) => {
 };
 
 export const StarMatch = () => {
+  const [stars, setStars] = useState(randIntInclusive(1, 9));
+
   return (
     <div className="game">
       <div className="help">
-        Pick 1 or more numbers that sum to the number of stars.
+        Pick one or more numbers that sum to the number of stars currently
+        shown.
       </div>
       <div className="body">
         <div className="left">
-          {arrayFromRange(1, 9).map((currentStar) => (
+          {arrayFromRange(1, stars).map((currentStar) => (
             <Star />
           ))}
         </div>
