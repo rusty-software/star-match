@@ -1,32 +1,4 @@
-const utils = {
-  // Given an array of numbers, returns the sum of the contents of the array
-  sum: (arr: number[]) => arr.reduce((acc, curr) => acc + curr, 0),
-
-  // Given a min and max, returns an array of numbers between min and max (inclusive)
-  range: (min: number, max: number) =>
-    Array.from({ length: max - min + 1 }, (_, i) => min + i),
-
-  // Given a min and max, returns a random number (inclusive) from the range
-  random: (min: number, max: number) =>
-    Math.floor(Math.random() * (max - min + 1)) + min,
-
-  // Given an array of numbers and a max, returns a random sum from the set of available sums
-  randomSumIn: (arr: number[][], max: number) => {
-    const sets: number[][] = [[]];
-    const sums = [];
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0, len = sets.length; j < len; j++) {
-        const candidateSet = sets[j].concat(arr[i]);
-        const candidateSum = utils.sum(candidateSet);
-        if (candidateSum <= max) {
-          sets.push(candidateSet);
-          sums.push(candidateSum);
-        }
-      }
-    }
-    return sums[utils.random(0, sums.length - 1)];
-  },
-};
+import { arrayFromRange } from "./lib/utils";
 
 const colors = {
   available: "lightgray",
@@ -35,7 +7,15 @@ const colors = {
   candidate: "deepskyblue",
 };
 
+const Star = () => {
+  return <div className="star" />;
+};
+
 export const StarMatch = () => {
+  const starCount = 5;
+
+  const foo = arrayFromRange(1, starCount);
+
   return (
     <div className="game">
       <div className="help">
@@ -43,15 +23,9 @@ export const StarMatch = () => {
       </div>
       <div className="body">
         <div className="left">
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
-          <div className="star" />
+          {foo.map((currentStar) => (
+            <Star />
+          ))}
         </div>
         <div className="right">
           <button className="number">1</button>
