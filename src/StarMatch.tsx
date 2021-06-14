@@ -4,24 +4,42 @@ import {
   randomSumIn,
   sum,
 } from "./lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Digit } from "./components/Digit";
 import { StarsDisplay } from "./components/StarsDisplay";
 import { DigitStatus } from "./components/DigitStatus";
+import { GameStatus } from "./GameStatus";
 import { PlayAgain } from "./components/PlayAgain";
 
 export const StarMatch = () => {
   const [stars, setStars] = useState(randIntInclusive(1, 9));
   const [availableNums, setAvailableNums] = useState(arrayFromRange(1, 9));
   const [candidateNums, setCandidateNums] = useState([] as number[]);
+  const [timeRemaining, setTimeRemaining] = useState(10);
+
+  useEffect(() => {
+    if (timeRemaining > 0 && availableNums.length > 0) {
+      const timeoutId = setTimeout(() => {
+        setTimeRemaining(timeRemaining - 1);
+      }, 1000);
+      return () => clearTimeout(timeoutId);
+    }
+  });
 
   const invalidCandidates = sum(candidateNums) > stars;
-  const gameWon = availableNums.length === 0;
+
+  const gameStatus =
+    availableNums.length === 0
+      ? GameStatus.Won
+      : timeRemaining === 0
+      ? GameStatus.Lost
+      : GameStatus.Active;
 
   const resetGame = () => {
     setStars(randIntInclusive(1, 9));
     setAvailableNums(arrayFromRange(1, 9));
     setCandidateNums([] as number[]);
+    setTimeRemaining(10);
   };
 
   const numberStatus = (i: number): DigitStatus => {
@@ -35,7 +53,10 @@ export const StarMatch = () => {
   };
 
   const handleDigitClick = (digit: number, currentStatus: DigitStatus) => {
-    if (currentStatus === DigitStatus.Used) {
+    if (
+      gameStatus !== GameStatus.Active ||
+      currentStatus === DigitStatus.Used
+    ) {
       return;
     }
 
@@ -55,6 +76,22 @@ export const StarMatch = () => {
     }
   };
 
+  let gameDisplay;
+  switch (gameStatus) {
+    case GameStatus.Won:
+      gameDisplay = (
+        <PlayAgain clickHandler={resetGame} gameStatus={gameStatus} />
+      );
+      break;
+    case GameStatus.Lost:
+      gameDisplay = (
+        <PlayAgain clickHandler={resetGame} gameStatus={gameStatus} />
+      );
+      break;
+    default:
+      gameDisplay = <StarsDisplay starCount={stars} />;
+  }
+
   return (
     <div className="game">
       <div className="help">
@@ -62,13 +99,7 @@ export const StarMatch = () => {
         shown.
       </div>
       <div className="body">
-        <div className="left">
-          {gameWon ? (
-            <PlayAgain clickHandler={resetGame} />
-          ) : (
-            <StarsDisplay starCount={stars} />
-          )}
-        </div>
+        <div className="left">{gameDisplay}</div>
         <div className="right">
           {arrayFromRange(1, 9).map((i) => (
             <Digit
@@ -80,7 +111,7 @@ export const StarMatch = () => {
           ))}
         </div>
       </div>
-      <div className="timer">Time Remaining: 10</div>
+      <div className="timer">Time Remaining: {timeRemaining}</div>
     </div>
   );
 };
