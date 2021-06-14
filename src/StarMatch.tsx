@@ -1,17 +1,25 @@
-import { arrayFromRange, randIntInclusive } from "./lib/utils";
+import { arrayFromRange, randIntInclusive, sum } from "./lib/utils";
 import { useState } from "react";
 import { Digit } from "./components/Digit";
 import { StarsDisplay } from "./components/StarsDisplay";
-
-const colors = {
-  available: "lightgray",
-  used: "lightgreen",
-  wrong: "lightcoral",
-  candidate: "deepskyblue",
-};
+import { DigitStatus } from "./components/DigitStatus";
 
 export const StarMatch = () => {
   const [stars, setStars] = useState(randIntInclusive(1, 9));
+  const [availableNums, setAvailableNums] = useState(arrayFromRange(1, 9));
+  const [candidateNums, setCandidateNums] = useState([] as number[]);
+
+  const invalidCandidates = sum(candidateNums) > stars;
+
+  const numberStatus = (i: number): DigitStatus => {
+    if (!availableNums.includes(i)) {
+      return DigitStatus.Used;
+    }
+    if (candidateNums.includes(i)) {
+      return invalidCandidates ? DigitStatus.Wrong : DigitStatus.Candidate;
+    }
+    return DigitStatus.Available;
+  };
 
   return (
     <div className="game">
@@ -25,7 +33,7 @@ export const StarMatch = () => {
         </div>
         <div className="right">
           {arrayFromRange(1, 9).map((i) => (
-            <Digit key={i} digit={i} />
+            <Digit key={i} digit={i} status={numberStatus(i)} />
           ))}
         </div>
       </div>
