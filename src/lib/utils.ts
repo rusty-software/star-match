@@ -14,7 +14,7 @@ export const randIntInclusive = (min: number, max: number): number => {
 };
 
 // Given an array of numbers and a max, returns a random sum from the set of available sums
-export const randomSumIn = (arr: number[][], max: number): number => {
+export const randomSumIn = (arr: number[], max: number): number => {
   const sets: number[][] = [[]];
   const sums = [];
   for (let i = 0; i < arr.length; i++) {

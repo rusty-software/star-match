@@ -3,6 +3,7 @@ import { DigitStatus } from "./DigitStatus";
 interface DigitProps {
   digit: number;
   status: DigitStatus;
+  clickHandler: (digit: number, status: DigitStatus) => void;
 }
 
 const colors = new Map([
@@ -13,14 +14,12 @@ const colors = new Map([
 ]);
 
 export const Digit = (props: DigitProps) => {
-  const { digit, status } = props;
+  const { digit, status, clickHandler } = props;
   return (
     <button
       className="number"
       style={{ backgroundColor: colors.get(status) }}
-      onClick={() => {
-        console.log("clicked:", digit);
-      }}
+      onClick={() => clickHandler(digit, status)}
     >
       {digit}
     </button>
