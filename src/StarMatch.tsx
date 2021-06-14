@@ -1,15 +1,28 @@
-import { arrayFromRange, randomSumIn, sum } from "./lib/utils";
+import {
+  arrayFromRange,
+  randIntInclusive,
+  randomSumIn,
+  sum,
+} from "./lib/utils";
 import { useState } from "react";
 import { Digit } from "./components/Digit";
 import { StarsDisplay } from "./components/StarsDisplay";
 import { DigitStatus } from "./components/DigitStatus";
+import { PlayAgain } from "./components/PlayAgain";
 
 export const StarMatch = () => {
-  const [stars, setStars] = useState(9);
+  const [stars, setStars] = useState(randIntInclusive(1, 9));
   const [availableNums, setAvailableNums] = useState(arrayFromRange(1, 9));
   const [candidateNums, setCandidateNums] = useState([] as number[]);
 
   const invalidCandidates = sum(candidateNums) > stars;
+  const gameWon = availableNums.length === 0;
+
+  const resetGame = () => {
+    setStars(randIntInclusive(1, 9));
+    setAvailableNums(arrayFromRange(1, 9));
+    setCandidateNums([] as number[]);
+  };
 
   const numberStatus = (i: number): DigitStatus => {
     if (!availableNums.includes(i)) {
@@ -50,7 +63,11 @@ export const StarMatch = () => {
       </div>
       <div className="body">
         <div className="left">
-          <StarsDisplay starCount={stars} />
+          {gameWon ? (
+            <PlayAgain clickHandler={resetGame} />
+          ) : (
+            <StarsDisplay starCount={stars} />
+          )}
         </div>
         <div className="right">
           {arrayFromRange(1, 9).map((i) => (
