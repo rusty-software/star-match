@@ -1,24 +1,13 @@
 import { arrayFromRange, randIntInclusive } from "./lib/utils";
 import { useState } from "react";
+import { Digit } from "./components/Digit";
+import { StarsDisplay } from "./components/StarsDisplay";
 
 const colors = {
   available: "lightgray",
   used: "lightgreen",
   wrong: "lightcoral",
   candidate: "deepskyblue",
-};
-
-const Star = () => {
-  return <div className="star" />;
-};
-
-interface DigitProps {
-  digit: number;
-}
-
-const Digit = (props: DigitProps) => {
-  const { digit } = props;
-  return <button className="number">{digit}</button>;
 };
 
 export const StarMatch = () => {
@@ -32,13 +21,11 @@ export const StarMatch = () => {
       </div>
       <div className="body">
         <div className="left">
-          {arrayFromRange(1, stars).map((currentStar) => (
-            <Star />
-          ))}
+          <StarsDisplay starCount={stars} />
         </div>
         <div className="right">
           {arrayFromRange(1, 9).map((i) => (
-            <Digit digit={i} />
+            <Digit key={i} digit={i} />
           ))}
         </div>
       </div>
