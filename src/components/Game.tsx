@@ -11,16 +11,19 @@ import { PlayAgain } from "./PlayAgain";
 import { StarsDisplay } from "./StarsDisplay";
 import { Digit } from "./Digit";
 
-export interface GameProps {
-  newGame: () => void;
+interface GameState {
+  stars: number;
+  availableNums: number[];
+  candidateNums: number[];
+  timeRemaining: number;
+  setGameState: (newCandidateNums: number[]) => void;
 }
-export const Game = (props: GameProps) => {
+
+const useGameState = (): GameState => {
   const [stars, setStars] = useState(randIntInclusive(1, 9));
   const [availableNums, setAvailableNums] = useState(arrayFromRange(1, 9));
   const [candidateNums, setCandidateNums] = useState([] as number[]);
   const [timeRemaining, setTimeRemaining] = useState(10);
-
-  const { newGame } = props;
 
   useEffect(() => {
     if (timeRemaining > 0 && availableNums.length > 0) {
@@ -30,6 +33,31 @@ export const Game = (props: GameProps) => {
       return () => clearTimeout(timeoutId);
     }
   });
+
+  const setGameState = (newCandidateNums: number[]) => {
+    if (sum(newCandidateNums) !== stars) {
+      setCandidateNums(newCandidateNums);
+    } else {
+      const newAvailableNums = availableNums.filter(
+        (i) => !newCandidateNums.includes(i)
+      );
+      setStars(randomSumIn(newAvailableNums, 9));
+      setAvailableNums(newAvailableNums);
+      setCandidateNums([] as number[]);
+    }
+  };
+
+  return { stars, availableNums, candidateNums, timeRemaining, setGameState };
+};
+
+export interface GameProps {
+  newGame: () => void;
+}
+export const Game = (props: GameProps) => {
+  const { newGame } = props;
+
+  const { stars, availableNums, candidateNums, timeRemaining, setGameState } =
+    useGameState();
 
   const invalidCandidates = sum(candidateNums) > stars;
 
@@ -62,16 +90,7 @@ export const Game = (props: GameProps) => {
       currentStatus === DigitStatus.Available
         ? candidateNums.concat(digit)
         : candidateNums.filter((i) => i !== digit);
-    if (sum(newCandidateNums) !== stars) {
-      setCandidateNums(newCandidateNums);
-    } else {
-      const newAvailableNums = availableNums.filter(
-        (i) => !newCandidateNums.includes(i)
-      );
-      setStars(randomSumIn(newAvailableNums, 9));
-      setAvailableNums(newAvailableNums);
-      setCandidateNums([] as number[]);
-    }
+    setGameState(newCandidateNums);
   };
 
   let gameDisplay;
