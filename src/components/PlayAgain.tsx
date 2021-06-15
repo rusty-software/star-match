@@ -14,7 +14,7 @@ export const PlayAgain = (props: PlayAgainProps) => {
         className="message"
         style={{ color: gameStatus === GameStatus.Won ? "green" : "red" }}
       >
-        {gameStatus === GameStatus.Won ? "Congratulations!" : "Nice try!"}
+        {gameStatus === GameStatus.Won ? "You win!" : "Nice try!"}
       </div>
       <button className="game-done" onClick={clickHandler}>
         Play Again!

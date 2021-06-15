@@ -56,8 +56,14 @@
   margin-left: 3px;
 }
 
-.game-done .message {
-  font-size: 250%;
+.game-done {
+  font-size: 125%;
+  font-weight: bold;
+  margin: 15px;
+}
+
+.message {
+  font-size: 150%;
   font-weight: bold;
   margin: 15px;
 }
