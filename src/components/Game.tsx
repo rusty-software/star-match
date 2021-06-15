@@ -1,10 +1,4 @@
-import { useEffect, useState } from "react";
-import {
-  arrayFromRange,
-  randIntInclusive,
-  randomSumIn,
-  sum,
-} from "../lib/utils";
+import { arrayFromRange, sum } from "../lib/utils";
 import { GameStatus } from "../GameStatus";
 import { DigitStatus } from "./DigitStatus";
 import { PlayAgain } from "./PlayAgain";
